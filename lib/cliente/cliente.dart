@@ -11,6 +11,8 @@ class Cliente{
   List<ClienteContato>? contatos;
   List<ClienteEndereco>? enderecos;
 
+
+
   Cliente({required this.id, required this.razaoSocial, required this.cpfCnpj,
     this.nomeFantasia,  this.contatos, this.dataCadastro, this.enderecos});
 }
