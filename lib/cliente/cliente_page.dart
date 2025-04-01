@@ -1,4 +1,5 @@
 import 'package:crm_agro/cliente/adicionar_cliente_page.dart';
+import 'package:crm_agro/cliente/cliente_filtro_page.dart';
 import 'package:flutter/material.dart';
 
 class ClientePage extends StatefulWidget{
@@ -32,6 +33,12 @@ class _ClientePageState extends State {
       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       centerTitle: true,
       title: const Text('Clientes'),
+      actions: [
+        IconButton(
+            onPressed: _abrirFiltro,
+            icon: Icon(Icons.filter_list)
+        )
+      ],
     );
   }
 
@@ -43,6 +50,14 @@ class _ClientePageState extends State {
       },
       separatorBuilder: (BuildContext context, int index) => Divider(),
     );
+  }
+
+  void _abrirFiltro() {
+    final navigator = Navigator.of(context);
+    navigator.pushNamed(FiltroClientePage.ROUT_NAME).then((alterouValores){
+      if(alterouValores == null) {
+      }
+    });
   }
 
 }

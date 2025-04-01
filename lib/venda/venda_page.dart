@@ -1,4 +1,5 @@
 import 'package:crm_agro/venda/adicionar_venda_page.dart';
+import 'package:crm_agro/venda/filtro_venda_page.dart';
 import 'package:flutter/material.dart';
 
 class VendaPage extends StatefulWidget{
@@ -17,6 +18,7 @@ class _VendaPageState extends State {
     return Scaffold(
       appBar: _criarAppBar(),
       body: _criarBody(),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           final navigator = Navigator.of(context);
@@ -32,6 +34,12 @@ class _VendaPageState extends State {
       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       centerTitle: true,
       title: const Text('Vendas'),
+      actions: [
+        IconButton(
+            onPressed: _abrirFiltro,
+            icon: Icon(Icons.filter_list)
+        )
+      ],
     );
   }
 
@@ -39,4 +47,13 @@ class _VendaPageState extends State {
     return Container(
     );
   }
+
+  void _abrirFiltro() {
+    final navigator = Navigator.of(context);
+    navigator.pushNamed(FiltroVendaPage.ROUT_NAME).then((alterouValores){
+      if(alterouValores == null) {
+      }
+    });
+  }
+
 }
