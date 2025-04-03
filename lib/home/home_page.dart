@@ -1,9 +1,12 @@
 
+import 'dart:io';
+
 import 'package:crm_agro/cliente/cliente_page.dart';
 import 'package:crm_agro/item/item_page.dart';
 import 'package:crm_agro/venda/venda_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget{
 
@@ -21,6 +24,55 @@ class _HomePageState extends State {
     return Scaffold(
       appBar: _criarAppBar(),
       body: _criarBody(),
+      drawer: Drawer(
+        child: ListView(
+        padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.green),
+              child: Text(
+                "Bem-vindo!",
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text("Cliente"),
+              onTap: () {
+                final navigator = Navigator.of(context);
+                navigator.pushNamed(ClientePage.ROUT_NAME);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.production_quantity_limits),
+              title: Text("Item"),
+              onTap: () {
+                final navigator = Navigator.of(context);
+                navigator.pushNamed(ItemPage.ROUT_NAME);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.add_business),
+              title: Text("Venda"),
+              onTap: () {
+                final navigator = Navigator.of(context);
+                navigator.pushNamed(VendaPage.ROUT_NAME);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text("Sair"),
+              onTap: () {
+                if (Platform.isAndroid) {
+                  SystemNavigator.pop();
+                } else if (Platform.isIOS) {
+                  exit(0);
+                }
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
