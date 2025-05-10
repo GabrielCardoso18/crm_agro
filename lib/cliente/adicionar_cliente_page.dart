@@ -1,3 +1,6 @@
+import 'package:crm_agro/cliente/cliente.dart';
+import 'package:crm_agro/cliente_contato/cliente_contato.dart';
+import 'package:crm_agro/cliente_endereco/cliente_endereco.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -13,9 +16,21 @@ class AdicionarClientePage extends StatefulWidget{
 class _AdicionarClientePage extends State {
 
   final nomeFantasiaController = TextEditingController();
+  final razaoSocialController = TextEditingController();
+  final cpfCnpjController = TextEditingController();
   final dataCadastroControler = TextEditingController();
-  final _dateFormat = DateFormat('dd/MM/yyyy');
+  final telefoneControler = TextEditingController();
+  final celularControler = TextEditingController();
+  final whatsAppControler = TextEditingController();
+  final emailControler = TextEditingController();
+  final enderecoControler = TextEditingController();
+  final bairroControler = TextEditingController();
+  final numeroControler = TextEditingController();
+  final cidadeControler = TextEditingController();
+  final ufControler = TextEditingController();
+  final complementoControler = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  final _dateFormat = DateFormat('dd/MM/yyyy');
 
   @override
   void initState(){
@@ -59,7 +74,7 @@ class _AdicionarClientePage extends State {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
-              controller: nomeFantasiaController,
+              controller: razaoSocialController,
               decoration: InputDecoration(labelText: 'Razão social'),
               validator: (String? valor){
                 if (valor == null || valor.isEmpty){
@@ -72,7 +87,7 @@ class _AdicionarClientePage extends State {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
-              controller: nomeFantasiaController,
+              controller: cpfCnpjController,
               decoration: InputDecoration(labelText: 'Cpf/Cnpj'),
               validator: (String? valor){
                 if (valor == null || valor.isEmpty){
@@ -91,7 +106,7 @@ class _AdicionarClientePage extends State {
                   child: Column(
                     children: [
                       TextFormField(
-                        controller: nomeFantasiaController,
+                        controller: celularControler,
                         decoration: InputDecoration(labelText: 'Celular'),
                         validator: (String? valor){
                           if (valor == null || valor.isEmpty){
@@ -101,7 +116,7 @@ class _AdicionarClientePage extends State {
                         },
                       ),
                       TextFormField(
-                        controller: nomeFantasiaController,
+                        controller: telefoneControler,
                         decoration: InputDecoration(labelText: 'Telefone'),
                         validator: (String? valor){
                           if (valor == null || valor.isEmpty){
@@ -111,7 +126,7 @@ class _AdicionarClientePage extends State {
                         },
                       ),
                       TextFormField(
-                        controller: nomeFantasiaController,
+                        controller: whatsAppControler,
                         decoration: InputDecoration(labelText: 'WhatsApp'),
                         validator: (String? valor){
                           if (valor == null || valor.isEmpty){
@@ -121,7 +136,7 @@ class _AdicionarClientePage extends State {
                         },
                       ),
                       TextFormField(
-                        controller: nomeFantasiaController,
+                        controller: emailControler,
                         decoration: InputDecoration(labelText: 'E-mail'),
                         validator: (String? valor){
                           if (valor == null || valor.isEmpty){
@@ -145,7 +160,7 @@ class _AdicionarClientePage extends State {
                   child: Column(
                     children: [
                       TextFormField(
-                        controller: nomeFantasiaController,
+                        controller: enderecoControler,
                         decoration: InputDecoration(labelText: 'Endereço'),
                         validator: (String? valor){
                           if (valor == null || valor.isEmpty){
@@ -155,7 +170,7 @@ class _AdicionarClientePage extends State {
                         },
                       ),
                       TextFormField(
-                        controller: nomeFantasiaController,
+                        controller: numeroControler,
                         decoration: InputDecoration(labelText: 'Numero'),
                         validator: (String? valor){
                           if (valor == null || valor.isEmpty){
@@ -165,7 +180,7 @@ class _AdicionarClientePage extends State {
                         },
                       ),
                       TextFormField(
-                        controller: nomeFantasiaController,
+                        controller: bairroControler,
                         decoration: InputDecoration(labelText: 'Bairro'),
                         validator: (String? valor){
                           if (valor == null || valor.isEmpty){
@@ -175,7 +190,7 @@ class _AdicionarClientePage extends State {
                         },
                       ),
                       TextFormField(
-                        controller: nomeFantasiaController,
+                        controller: complementoControler,
                         decoration: InputDecoration(labelText: 'Complemento'),
                         validator: (String? valor){
                           if (valor == null || valor.isEmpty){
@@ -185,7 +200,7 @@ class _AdicionarClientePage extends State {
                         },
                       ),
                       TextFormField(
-                        controller: nomeFantasiaController,
+                        controller: cidadeControler,
                         decoration: InputDecoration(labelText: 'Cidade'),
                         validator: (String? valor){
                           if (valor == null || valor.isEmpty){
@@ -195,7 +210,7 @@ class _AdicionarClientePage extends State {
                         },
                       ),
                       TextFormField(
-                        controller: nomeFantasiaController,
+                        controller: ufControler,
                         decoration: InputDecoration(labelText: 'UF'),
                         validator: (String? valor){
                           if (valor == null || valor.isEmpty){
@@ -215,11 +230,32 @@ class _AdicionarClientePage extends State {
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: TextButton(
-                onPressed: (){
-                  final navigator = Navigator.of(context);
-                  navigator.pop();
-                },
-                child: Text("Salvar")),
+                  onPressed: () {
+                    if (!formKey.currentState!.validate()) return;
+                    final cliente = Cliente(
+                      nomeFantasia: nomeFantasiaController.text,
+                      razaoSocial: razaoSocialController.text,
+                      cpfCnpj: cpfCnpjController.text,
+                      dataCadastro: DateTime.now(),
+                      contato: ClienteContato(
+                        telefone: telefoneControler.text,
+                        celular: celularControler.text,
+                        whatsapp: whatsAppControler.text,
+                        email: emailControler.text,
+                      ),
+                      endereco: ClienteEndereco(
+                        endereco: enderecoControler.text,
+                        numero: numeroControler.text,
+                        bairro: bairroControler.text,
+                        complemento: complementoControler.text,
+                        cidade: cidadeControler.text,
+                        uf: ufControler.text,
+                      ),
+                    );
+
+                    Navigator.of(context).pop(cliente);
+                  },
+                  child: Text("Salvar")),
             ),
           )
         ],

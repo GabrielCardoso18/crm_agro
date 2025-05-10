@@ -4,6 +4,7 @@ import 'package:crm_agro/home/home_page.dart';
 import 'package:crm_agro/item/adicionar_item_page.dart';
 import 'package:crm_agro/item/item_filtro_page.dart';
 import 'package:crm_agro/item/item_page.dart';
+import 'package:crm_agro/util/cores_app.dart';
 import 'package:crm_agro/venda/adicionar_venda_page.dart';
 import 'package:crm_agro/venda/filtro_venda_page.dart';
 import 'package:crm_agro/venda/venda_page.dart';
@@ -25,8 +26,21 @@ class MyApp extends StatelessWidget {
       title: 'App Gerenciador de Tarefas',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
+        primaryColor: CoresApp.verde,
+        scaffoldBackgroundColor: CoresApp.branco,
+        appBarTheme: AppBarTheme(
+          backgroundColor: CoresApp.verde,
+          foregroundColor: Colors.white,
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: CoresApp.amarelo,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: CoresApp.verde,
+            foregroundColor: Colors.white,
+          ),
+        ),
       ),
       home: HomePage(),
       routes: {

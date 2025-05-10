@@ -1,8 +1,10 @@
 import 'package:crm_agro/cliente/adicionar_cliente_page.dart';
+import 'package:crm_agro/cliente/cliente.dart';
 import 'package:crm_agro/cliente/cliente_filtro_page.dart';
 import 'package:flutter/material.dart';
 
 class ClientePage extends StatefulWidget{
+  late final Cliente? clienteAtual;
 
   @override
   _ClientePageState createState() => _ClientePageState();
