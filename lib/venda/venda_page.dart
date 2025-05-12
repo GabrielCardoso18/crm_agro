@@ -1,6 +1,10 @@
+import 'package:crm_agro/dao/venda_dao.dart';
+import 'package:crm_agro/util/cores_app.dart';
 import 'package:crm_agro/venda/adicionar_venda_page.dart';
 import 'package:crm_agro/venda/filtro_venda_page.dart';
+import 'package:crm_agro/venda/venda.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VendaPage extends StatefulWidget{
 
@@ -11,40 +15,212 @@ class VendaPage extends StatefulWidget{
 
 }
 
-class _VendaPageState extends State {
+class _VendaPageState extends State<VendaPage> {
+
+  static const ACAO_EDITAR = 'editar';
+  static const ACAO_EXCLUIR = 'excluir';
+
+  final vendas = <Venda> [];
+  final _dao = VendaDAO();
+  var _carregando = false;
 
   @override
-  Widget build (BuildContext context){
-    return Scaffold(
-      appBar: _criarAppBar(),
-      body: _criarBody(),
+  void initState() {
+    super.initState();
+    _atualizarLista();
+  }
 
+  void _atualizarLista() async {
+    final prefs = await SharedPreferences.getInstance();
+    //final campoOrdenacao = prefs.getString(FiltroClientePage) ?? Cliente.CAMPO_ID;
+    // final buscarTarefas = await _dao.listar();
+    // setState(() {
+    //   clientes.clear();
+    //   if(buscarTarefas.isNotEmpty){
+    //     clientes.addAll(buscarTarefas);
+    //   }
+    // });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: CoresApp.verde,
+        foregroundColor: Colors.white,
+        centerTitle: true,
+        title: const Text(
+          'Vendas',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: _abrirFiltro,
+            icon: Icon(Icons.filter_list),
+            tooltip: 'Filtrar',
+          ),
+        ],
+        elevation: 4,
+      ),
+      body: _carregando
+          ? _buildLoadingState()
+          : vendas.isEmpty
+          ? _buildEmptyState()
+          : _buildVendaList(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          final navigator = Navigator.of(context);
-          navigator.pushNamed(AdicionarVendaPage.ROUT_NAME);
-        },
-        child: Icon(Icons.add),
+        onPressed: () => Navigator.pushNamed(context, AdicionarVendaPage.ROUT_NAME)
+            .then((_) => _atualizarLista()),
+        backgroundColor: CoresApp.cinzaEscuro,
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }
 
-  AppBar _criarAppBar() {
-    return AppBar(
-      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      centerTitle: true,
-      title: const Text('Vendas'),
-      actions: [
-        IconButton(
-            onPressed: _abrirFiltro,
-            icon: Icon(Icons.filter_list)
-        )
-      ],
+  Widget _buildLoadingState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(color: CoresApp.verde),
+          SizedBox(height: 16),
+          Text(
+            'Carregando vendas...',
+            style: TextStyle(
+              fontSize: 18,
+              color: CoresApp.verde,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _criarBody() {
-    return Container(
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.receipt_long_outlined,
+            size: 60,
+            color: Colors.grey[400],
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Nenhuma venda cadastrada',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Toque no botão + para adicionar',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[500],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVendaList() {
+    return RefreshIndicator(
+      onRefresh: () async => _atualizarLista(),
+      color: CoresApp.verde,
+      child: ListView.separated(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        itemCount: vendas.length,
+        itemBuilder: (context, index) {
+          final venda = vendas[index];
+          return Card(
+            margin: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            elevation: 1,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              leading: CircleAvatar(
+                backgroundColor: CoresApp.verde.withOpacity(0.2),
+                child: Icon(
+                  Icons.receipt,
+                  color: CoresApp.verde,
+                ),
+              ),
+              title: Text(
+                'Venda #${venda.numero ?? ""}',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Cliente: ${venda.cliente?.nomeFantasia ?? "Não informado"}',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  Text(
+                    'Total: R\$ ${venda.valorTotal?.toStringAsFixed(2) ?? "0.00"}',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+              trailing: PopupMenuButton<String>(
+                icon: Icon(Icons.more_vert, color: Colors.grey[600]),
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: ACAO_EDITAR,
+                    child: Row(
+                      children: [
+                        Icon(Icons.edit, color: CoresApp.verde),
+                        SizedBox(width: 8),
+                        Text('Editar'),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: ACAO_EXCLUIR,
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete, color: Colors.red),
+                        SizedBox(width: 8),
+                        Text('Excluir'),
+                      ],
+                    ),
+                  ),
+                ],
+                onSelected: (value) {
+                  if (value == ACAO_EDITAR) {
+                    Navigator.pushNamed(context, AdicionarVendaPage.ROUT_NAME)
+                        .then((_) => _atualizarLista());
+                  } else if (value == ACAO_EXCLUIR) {
+                  }
+                },
+              ),
+              onTap: () {
+                Navigator.pushNamed(context, AdicionarVendaPage.ROUT_NAME)
+                    .then((_) => _atualizarLista());
+              },
+            ),
+          );
+        },
+        separatorBuilder: (context, index) => SizedBox(height: 4),
+      ),
     );
   }
 

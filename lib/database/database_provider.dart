@@ -1,3 +1,10 @@
+import 'package:crm_agro/cliente/adicionar_cliente_page.dart';
+import 'package:crm_agro/cliente/cliente.dart';
+import 'package:crm_agro/cliente_contato/cliente_contato.dart';
+import 'package:crm_agro/cliente_endereco/cliente_endereco.dart';
+import 'package:crm_agro/item/item.dart';
+import 'package:crm_agro/venda/venda.dart';
+import 'package:crm_agro/venda_item/venda_item.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DataBaseProvider {

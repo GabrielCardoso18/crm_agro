@@ -16,27 +16,22 @@ class Venda {
   static const CAMPO_VENDA_ITENS = 'itens';
   static const nomeTabela = 'venda';
 
-  int id;
+  int? id;
   Cliente? cliente;
   String? numero;
   String? observacoes;
-  double? quantidade;
-  double? valorUnitario;
   double? valorTotal;
   DateTime? dataCadastro;
   List<VendaItem>? itens;
 
-  Venda({required this.id, required this.cliente, required this.itens,
-    this.numero, this.dataCadastro, this.observacoes, this.valorTotal,
-    this.valorUnitario, this.quantidade});
+  Venda({this.id, required this.cliente, required this.itens,
+    this.numero, this.dataCadastro, this.observacoes, this.valorTotal});
 
   Map<String, dynamic> toMap() => <String, dynamic>{
     CAMPO_ID: id,
     CAMPO_CLIENTE: cliente?.toMap(),
     CAMPO_NUMERO: numero,
     CAMPO_OBSERVACOES: observacoes,
-    CAMPO_QUANTIDADE: quantidade,
-    CAMPO_VALOR_UNITARIO: valorUnitario,
     CAMPO_VALOR_TOTAL: valorTotal,
     CAMPO_DATA_CADASTRO: dataCadastro != null
         ? DateFormat('dd/MM/yyyy').format(dataCadastro!)
@@ -52,9 +47,7 @@ class Venda {
             : null,
         numero: map[CAMPO_NUMERO] is String ? map[CAMPO_NUMERO] : '',
         observacoes: map[CAMPO_OBSERVACOES] is String ? map[CAMPO_OBSERVACOES] : '',
-        quantidade: map[CAMPO_QUANTIDADE],
         valorTotal: map[CAMPO_VALOR_TOTAL],
-        valorUnitario: map[CAMPO_VALOR_UNITARIO],
         dataCadastro: map[CAMPO_DATA_CADASTRO] == null ? null :
           DateFormat("dd/MM/yyyy").parse(map[CAMPO_DATA_CADASTRO]),
         itens: map['itens'] != null && map['itens'] is List

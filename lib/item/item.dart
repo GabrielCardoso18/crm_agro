@@ -8,13 +8,13 @@ class Item {
   static const CAMPO_VALOR_UNITARIO = 'valorunitario';
   static const nomeTabela = 'item';
 
-  int id;
+  int? id;
   String descricao;
   String unidade;
   String? codigo;
   double valorUnitario;
 
-  Item({required this.id, required this.descricao, required this.unidade, required this.valorUnitario, this.codigo});
+  Item({this.id, required this.descricao, required this.unidade, required this.valorUnitario, this.codigo});
 
   Map<String, dynamic> toMap() => <String, dynamic>{
     CAMPO_ID: id,

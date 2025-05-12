@@ -11,14 +11,14 @@ class VendaItem {
   static const CAMPO_VALOR_TOTAL = 'valortotal';
   static const nomeTabela = 'venda_item';
 
-  int id;
+  int? id;
   Item? item;
-  double quantidade;
-  double valorUnitario;
-  double valorTotal;
+  double? quantidade;
+  double? valorUnitario;
+  double? valorTotal;
 
-  VendaItem({required this.id, required this.item, required this.quantidade,
-      required this.valorUnitario, required this.valorTotal});
+  VendaItem({this.id, this.item, this.quantidade,
+    this.valorUnitario, this.valorTotal});
 
   Map<String, dynamic> toMap() => <String, dynamic>{
     CAMPO_ID: id,

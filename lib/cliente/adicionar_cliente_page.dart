@@ -1,7 +1,10 @@
 import 'package:crm_agro/cliente/cliente.dart';
 import 'package:crm_agro/cliente_contato/cliente_contato.dart';
 import 'package:crm_agro/cliente_endereco/cliente_endereco.dart';
+import 'package:crm_agro/dao/cliente_dao.dart';
+import 'package:crm_agro/util/cores_app.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class AdicionarClientePage extends StatefulWidget{
@@ -38,229 +41,311 @@ class _AdicionarClientePage extends State {
   }
 
   @override
-  Widget build (BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _criarAppBar(),
-      body: _criarBody(),
+      appBar: AppBar(
+        backgroundColor: CoresApp.verde,
+        foregroundColor: Colors.white,
+        centerTitle: true,
+        title: const Text(
+          'Adicionar Cliente',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        elevation: 4,
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Form(
+          key: formKey,
+          child: Column(
+            children: [
+              _buildInfoBasicaCard(),
+              SizedBox(height: 16),
+              _buildContatosCard(),
+              SizedBox(height: 16),
+              _buildEnderecoCard(),
+              SizedBox(height: 24),
+              _buildBotaoSalvar(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
-  AppBar _criarAppBar() {
-    return AppBar(
-      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      centerTitle: true,
-      title: const Text('Adicionar Cliente'),
+  Widget _buildInfoBasicaCard() {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'INFORMAÇÕES BÁSICAS',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: CoresApp.verde,
+              ),
+            ),
+            SizedBox(height: 16),
+            _buildTextField(
+              controller: nomeFantasiaController,
+              label: 'Nome Fantasia',
+              icon: Icons.business,
+              validator: (val) => val!.isEmpty ? 'Campo obrigatório' : null,
+            ),
+            SizedBox(height: 16),
+            _buildTextField(
+              controller: razaoSocialController,
+              label: 'Razão Social',
+              icon: Icons.description,
+              validator: (val) => val!.isEmpty ? 'Campo obrigatório' : null,
+            ),
+            SizedBox(height: 16),
+            _buildTextField(
+              controller: cpfCnpjController,
+              label: 'CPF/CNPJ',
+              icon: Icons.badge,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(14),
+              ],
+              validator: (val) => val!.isEmpty ? 'Campo obrigatório' : null,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _criarBody() {
-    return Container(
-      child: Column(
+  Widget _buildContatosCard() {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: ExpansionTile(
+        title: Text(
+          'CONTATOS',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.grey[800],
+          ),
+        ),
         children: [
           Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: nomeFantasiaController,
-              decoration: InputDecoration(labelText: 'Nome Fantasia'),
-              validator: (String? valor){
-                if (valor == null || valor.isEmpty){
-                  return 'O campo descrição é obrigatório';
-                }
-                return null;
-              },
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: razaoSocialController,
-              decoration: InputDecoration(labelText: 'Razão social'),
-              validator: (String? valor){
-                if (valor == null || valor.isEmpty){
-                  return 'O campo descrição é obrigatório';
-                }
-                return null;
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: cpfCnpjController,
-              decoration: InputDecoration(labelText: 'Cpf/Cnpj'),
-              validator: (String? valor){
-                if (valor == null || valor.isEmpty){
-                  return 'O campo descrição é obrigatório';
-                }
-                return null;
-              },
-            ),
-          ),
-          Card(
-            child: ExpansionTile(
-              title: Text("Contatos"),
+            padding: EdgeInsets.all(16),
+            child: Column(
               children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: celularControler,
-                        decoration: InputDecoration(labelText: 'Celular'),
-                        validator: (String? valor){
-                          if (valor == null || valor.isEmpty){
-                            return 'O campo descrição é obrigatório';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        controller: telefoneControler,
-                        decoration: InputDecoration(labelText: 'Telefone'),
-                        validator: (String? valor){
-                          if (valor == null || valor.isEmpty){
-                            return 'O campo descrição é obrigatório';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        controller: whatsAppControler,
-                        decoration: InputDecoration(labelText: 'WhatsApp'),
-                        validator: (String? valor){
-                          if (valor == null || valor.isEmpty){
-                            return 'O campo descrição é obrigatório';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        controller: emailControler,
-                        decoration: InputDecoration(labelText: 'E-mail'),
-                        validator: (String? valor){
-                          if (valor == null || valor.isEmpty){
-                            return 'O campo descrição é obrigatório';
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
-                  ),
+                _buildTextField(
+                  controller: celularControler,
+                  label: 'Celular',
+                  icon: Icons.phone_android,
+                  keyboardType: TextInputType.phone,
+                  validator: (val) => val!.isEmpty ? 'Campo obrigatório' : null,
+                ),
+                SizedBox(height: 16),
+                _buildTextField(
+                  controller: telefoneControler,
+                  label: 'Telefone',
+                  icon: Icons.phone,
+                  keyboardType: TextInputType.phone,
+                ),
+                SizedBox(height: 16),
+                _buildTextField(
+                  controller: whatsAppControler,
+                  label: 'WhatsApp',
+                  icon: Icons.comment_sharp,
+                  keyboardType: TextInputType.phone,
+                ),
+                SizedBox(height: 16),
+                _buildTextField(
+                  controller: emailControler,
+                  label: 'E-mail',
+                  icon: Icons.email,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (val) => val!.isEmpty ? 'Campo obrigatório' : null,
                 ),
               ],
             ),
           ),
-          Card(
-            child: ExpansionTile(
-              title: Text("Endereço"),
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: enderecoControler,
-                        decoration: InputDecoration(labelText: 'Endereço'),
-                        validator: (String? valor){
-                          if (valor == null || valor.isEmpty){
-                            return 'O campo descrição é obrigatório';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        controller: numeroControler,
-                        decoration: InputDecoration(labelText: 'Numero'),
-                        validator: (String? valor){
-                          if (valor == null || valor.isEmpty){
-                            return 'O campo descrição é obrigatório';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        controller: bairroControler,
-                        decoration: InputDecoration(labelText: 'Bairro'),
-                        validator: (String? valor){
-                          if (valor == null || valor.isEmpty){
-                            return 'O campo descrição é obrigatório';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        controller: complementoControler,
-                        decoration: InputDecoration(labelText: 'Complemento'),
-                        validator: (String? valor){
-                          if (valor == null || valor.isEmpty){
-                            return 'O campo descrição é obrigatório';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        controller: cidadeControler,
-                        decoration: InputDecoration(labelText: 'Cidade'),
-                        validator: (String? valor){
-                          if (valor == null || valor.isEmpty){
-                            return 'O campo descrição é obrigatório';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        controller: ufControler,
-                        decoration: InputDecoration(labelText: 'UF'),
-                        validator: (String? valor){
-                          if (valor == null || valor.isEmpty){
-                            return 'O campo descrição é obrigatório';
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Card(
-            color: Colors.green,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: TextButton(
-                  onPressed: () {
-                    if (!formKey.currentState!.validate()) return;
-                    final cliente = Cliente(
-                      nomeFantasia: nomeFantasiaController.text,
-                      razaoSocial: razaoSocialController.text,
-                      cpfCnpj: cpfCnpjController.text,
-                      dataCadastro: DateTime.now(),
-                      contato: ClienteContato(
-                        telefone: telefoneControler.text,
-                        celular: celularControler.text,
-                        whatsapp: whatsAppControler.text,
-                        email: emailControler.text,
-                      ),
-                      endereco: ClienteEndereco(
-                        endereco: enderecoControler.text,
-                        numero: numeroControler.text,
-                        bairro: bairroControler.text,
-                        complemento: complementoControler.text,
-                        cidade: cidadeControler.text,
-                        uf: ufControler.text,
-                      ),
-                    );
-
-                    Navigator.of(context).pop(cliente);
-                  },
-                  child: Text("Salvar")),
-            ),
-          )
         ],
       ),
     );
+  }
+
+  Widget _buildEnderecoCard() {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: ExpansionTile(
+        title: Text(
+          'ENDEREÇO',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.grey[800],
+          ),
+        ),
+        children: [
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                _buildTextField(
+                  controller: enderecoControler,
+                  label: 'Endereço',
+                  icon: Icons.location_on,
+                  validator: (val) => val!.isEmpty ? 'Campo obrigatório' : null,
+                ),
+                SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: _buildTextField(
+                        controller: numeroControler,
+                        label: 'Número',
+                        icon: Icons.numbers,
+                        validator: (val) => val!.isEmpty ? 'Campo obrigatório' : null,
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      flex: 3,
+                      child: _buildTextField(
+                        controller: bairroControler,
+                        label: 'Bairro',
+                        icon: Icons.location_city,
+                        validator: (val) => val!.isEmpty ? 'Campo obrigatório' : null,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                _buildTextField(
+                  controller: complementoControler,
+                  label: 'Complemento',
+                  icon: Icons.home_work,
+                ),
+                SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: _buildTextField(
+                        controller: cidadeControler,
+                        label: 'Cidade',
+                        icon: Icons.location_city,
+                        validator: (val) => val!.isEmpty ? 'Campo obrigatório' : null,
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      flex: 1,
+                      child: _buildTextField(
+                        controller: ufControler,
+                        label: 'UF',
+                        icon: Icons.map,
+                        validator: (val) => val!.isEmpty ? 'Campo obrigatório' : null,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    String? Function(String?)? validator,
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: CoresApp.verde),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: CoresApp.verde),
+        ),
+      ),
+      validator: validator,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+    );
+  }
+
+  Widget _buildBotaoSalvar() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: CoresApp.cinzaEscuro,
+          foregroundColor: Colors.white,
+          padding: EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        onPressed: _salvarCliente,
+        child: Text(
+          'SALVAR CLIENTE',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _salvarCliente() {
+    if (!formKey.currentState!.validate()) return;
+
+    final cliente = Cliente(
+      nomeFantasia: nomeFantasiaController.text,
+      razaoSocial: razaoSocialController.text,
+      cpfCnpj: cpfCnpjController.text,
+      dataCadastro: DateTime.now(),
+      contato: ClienteContato(
+        telefone: telefoneControler.text,
+        celular: celularControler.text,
+        whatsapp: whatsAppControler.text,
+        email: emailControler.text,
+      ),
+      endereco: ClienteEndereco(
+        endereco: enderecoControler.text,
+        numero: numeroControler.text,
+        bairro: bairroControler.text,
+        complemento: complementoControler.text,
+        cidade: cidadeControler.text,
+        uf: ufControler.text,
+      ),
+    );
+
+    ClienteDAO().salvar(cliente);
+    Navigator.of(context).pop(cliente);
   }
 }
 
