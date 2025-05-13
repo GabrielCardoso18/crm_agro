@@ -1,7 +1,7 @@
 
 class Item {
 
-  static const CAMPO_ID = '_id';
+  static const CAMPO_ID = 'id';
   static const CAMPO_DESCRICAO = 'descricao';
   static const CAMPO_UNIDADE = 'unidade';
   static const CAMPO_CODIGO = 'codigo';

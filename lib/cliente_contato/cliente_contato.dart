@@ -4,8 +4,8 @@ import 'package:crm_agro/cliente/cliente.dart';
 
 class ClienteContato{
 
-  static const CAMPO_ID = '_id';
-  static const CAMPO_CLIENTE = 'cliente';
+  static const CAMPO_ID = 'id';
+  static const CAMPO_CLIENTE = 'idcliente';
   static const CAMPO_TELEFONE = 'telefone';
   static const CAMPO_CELULAR = 'celular';
   static const CAMPO_WHATSAPP = 'whatsapp';

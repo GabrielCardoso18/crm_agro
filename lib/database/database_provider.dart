@@ -26,6 +26,7 @@ class DataBaseProvider {
   }
 
   Future<Database> _initDataBase() async {
+
     String dataBasePath = await getDatabasesPath();
     String dbPath = '${dataBasePath}/${_dbNome}';
     return await openDatabase(
@@ -38,7 +39,59 @@ class DataBaseProvider {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
-     
+      CREATE TABLE ${Cliente.nomeTabela} (
+        ${Cliente.CAMPO_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${Cliente.CAMPO_NOME_FANTASIA} TEXT NOT NULL,
+        ${Cliente.CAMPO_RAZAO_SOCIAL} TEXT,
+        ${Cliente.CAMPO_CPFCNPJ} TEXT,
+        ${Cliente.CAMPO_DATA_CADASTRO} TEXT
+      );
+      CREATE TABLE ${Item.nomeTabela} (
+        ${Item.CAMPO_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${Item.CAMPO_DESCRICAO} TEXT NOT NULL,
+        ${Item.CAMPO_CODIGO} TEXT,
+        ${Item.CAMPO_VALOR_UNITARIO} NUMERIC,
+        ${Item.CAMPO_UNIDADE} TEXT
+      );
+      CREATE TABLE ${Venda.nomeTabela} (
+        ${Venda.CAMPO_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${Venda.CAMPO_CLIENTE} INTEGER,
+        ${Venda.CAMPO_NUMERO} TEXT,
+        ${Venda.CAMPO_DATA_CADASTRO} TEXT,
+        ${Venda.CAMPO_VALOR_TOTAL} NUMERIC,
+        ${Venda.CAMPO_OBSERVACOES} TEXT,
+        FOREIGN KEY (idcliente) REFERENCES cliente(id)
+      );
+      CREATE TABLE ${VendaItem.nomeTabela} (
+        ${VendaItem.CAMPO_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${VendaItem.CAMPO_ITEM} INTEGER,
+        ${VendaItem.CAMPO_VENDA} INTEGER,
+        ${VendaItem.CAMPO_QUANTIDADE} NUMERIC,
+        ${VendaItem.CAMPO_VALOR_UNITARIO} NUMERIC,
+        ${VendaItem.CAMPO_VALOR_TOTAL} NUMERIC,
+        FOREIGN KEY (iditem) REFERENCES item(id),
+        FOREIGN KEY (idvenda) REFERENCES venda(id)
+      );
+      CREATE TABLE ${ClienteContato.nomeTabela} (
+        ${ClienteContato.CAMPO_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${ClienteContato.CAMPO_CLIENTE} INTEGER,
+        ${ClienteContato.CAMPO_CELULAR} TEXT,
+        ${ClienteContato.CAMPO_EMAIL} TEXT,
+        ${ClienteContato.CAMPO_TELEFONE} TEXT,
+        ${ClienteContato.CAMPO_WHATSAPP} TEXT,
+        FOREIGN KEY (idcliente) REFERENCES cliente(id)
+      );
+      CREATE TABLE ${ClienteEndereco.nomeTabela} (
+        ${ClienteEndereco.CAMPO_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${ClienteEndereco.CAMPO_CLIENTE} INTEGER,
+        ${ClienteEndereco.CAMPO_BAIRRO} TEXT,
+        ${ClienteEndereco.CAMPO_CIDADE} TEXT,
+        ${ClienteEndereco.CAMPO_COMPLEMENTO} TEXT,
+        ${ClienteEndereco.CAMPO_ENDERECO} TEXT,
+        ${ClienteEndereco.CAMPO_NUMERO} TEXT,
+        ${ClienteEndereco.CAMPO_UF} TEXT,
+        FOREIGN KEY (idcliente) REFERENCES cliente(id)
+      );
     ''');
   }
 

@@ -5,12 +5,10 @@ import 'package:intl/intl.dart';
 
 class Venda {
 
-  static const CAMPO_ID = '_id';
-  static const CAMPO_CLIENTE = 'cliente';
+  static const CAMPO_ID = 'id';
+  static const CAMPO_CLIENTE = 'idcliente';
   static const CAMPO_NUMERO = 'numero';
   static const CAMPO_OBSERVACOES = 'observacoes';
-  static const CAMPO_QUANTIDADE = 'quantidade';
-  static const CAMPO_VALOR_UNITARIO = 'valorunitario';
   static const CAMPO_VALOR_TOTAL = 'valortotal';
   static const CAMPO_DATA_CADASTRO = 'datacadastro';
   static const CAMPO_VENDA_ITENS = 'itens';

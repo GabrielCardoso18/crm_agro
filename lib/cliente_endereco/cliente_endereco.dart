@@ -2,8 +2,8 @@ import 'package:crm_agro/cliente/cliente.dart';
 
 class ClienteEndereco{
 
-  static const CAMPO_ID = '_id';
-  static const CAMPO_CLIENTE = 'cliente';
+  static const CAMPO_ID = 'id';
+  static const CAMPO_CLIENTE = 'idcliente';
   static const CAMPO_ENDERECO = 'endereco';
   static const CAMPO_BAIRRO = 'bairro';
   static const CAMPO_UF = 'uf';

@@ -16,7 +16,7 @@ class _ClientePage extends State<ClientePage>{
   static const ACAO_EDITAR = 'editar';
   static const ACAO_EXCLUIR = 'excluir';
 
-  final clientes = <Cliente>[];
+  late var clientes = <Cliente>[];
   final _dao = ClienteDAO();
   var _carregando = false;
 
@@ -28,7 +28,7 @@ class _ClientePage extends State<ClientePage>{
 
   void _atualizarLista() async {
     final prefs = await SharedPreferences.getInstance();
-    // Implementar lógica de carregamento
+    clientes = await _dao.listar();
     setState(() {
       _carregando = false;
     });

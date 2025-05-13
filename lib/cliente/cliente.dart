@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 class Cliente{
 
-  static const CAMPO_ID = '_id';
+  static const CAMPO_ID = 'id';
   static const CAMPO_NOME_FANTASIA = 'nomefantasia';
   static const CAMPO_RAZAO_SOCIAL = 'razaosocial';
   static const CAMPO_CPFCNPJ = 'cpfcnpj';
