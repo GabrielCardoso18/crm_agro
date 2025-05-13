@@ -30,9 +30,7 @@ class Cliente{
     CAMPO_RAZAO_SOCIAL: razaoSocial,
     CAMPO_CPFCNPJ: cpfCnpj,
     CAMPO_DATA_CADASTRO : dataCadastro == null ? null :
-    DateFormat('dd/MM/yyyy').format(dataCadastro!),
-    CAMPO_CONTATO: contato?.toMap(),
-    CAMPO_ENDERECO: endereco?.toMap(),
+    DateFormat('dd/MM/yyyy').format(dataCadastro!)
   };
 
   factory Cliente.fromMap(Map<String, dynamic> map) =>
