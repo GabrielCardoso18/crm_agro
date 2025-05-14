@@ -28,9 +28,23 @@ class _ClientePage extends State<ClientePage>{
 
   void _atualizarLista() async {
     final prefs = await SharedPreferences.getInstance();
-    clientes = await _dao.listar();
+    final campoOrdenacao = prefs.getString(FiltroClientePage.CHAVE_CAMPO_ORDENACAO) ?? Cliente.CAMPO_ID;
+    final usarOrdemDescrecente = prefs.getBool(FiltroClientePage.USAR_ORDEM_DECRESCENTE) == true;
+    final filtroNomeFantasia = prefs.getString(FiltroClientePage.CHAVE_FILTRO_NOME_FANTASIA ?? '');
+    final filtroRazaoSocial = prefs.getString(FiltroClientePage.CHAVE_FILTRO_RAZAO_SOCIAL ?? '');
+    final filtroCPFCNPJ = prefs.getString(FiltroClientePage.CHAVE_FILTRO_CPF_CNPJ ?? '');
+    final buscarClientes = await _dao.listar(
+        nomeFantasia: filtroNomeFantasia ?? "",
+        cpfCnpj: filtroCPFCNPJ ?? "",
+        razaoSocial: filtroRazaoSocial ?? "",
+        campoOrdencao: campoOrdenacao,
+        usarOrdemDecrescente: usarOrdemDescrecente
+    );
     setState(() {
-      _carregando = false;
+      clientes.clear();
+      if(buscarClientes.isNotEmpty){
+        clientes.addAll(buscarClientes);
+      }
     });
   }
 
@@ -149,15 +163,25 @@ class _ClientePage extends State<ClientePage>{
                       ),
                     ),
                   ],
-                  onSelected: (value) {
+                  onSelected: (value) async {
                     if (value == ACAO_EDITAR) {
-                      Navigator.pushNamed(context, AdicionarClientePage.ROUT_NAME);
+                       final resultado = await Navigator.pushNamed(
+                        context,
+                        AdicionarClientePage.ROUT_NAME,
+                        arguments: cliente,
+                      );
+
+                       if (resultado == true) {
+                         _atualizarLista();
+                       }
+
                     } else if (value == ACAO_EXCLUIR) {
+                      ClienteDAO().remover(cliente.id!);
+                      _atualizarLista();
                     }
                   },
                 ),
                 onTap: () {
-                  Navigator.pushNamed(context, AdicionarClientePage.ROUT_NAME);
                 },
               ),
             );
@@ -166,8 +190,11 @@ class _ClientePage extends State<ClientePage>{
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, AdicionarClientePage.ROUT_NAME);
+        onPressed: () async {
+          final resultado = await Navigator.pushNamed(context, AdicionarClientePage.ROUT_NAME);
+          if (resultado == true) {
+            _atualizarLista();
+          }
         },
         backgroundColor: CoresApp.cinzaEscuro,
         child: Icon(Icons.add, color: Colors.white),
@@ -175,7 +202,10 @@ class _ClientePage extends State<ClientePage>{
     );
   }
 
-  void _abrirFiltro() {
-    Navigator.pushNamed(context, FiltroClientePage.ROUT_NAME);
+  void _abrirFiltro() async {
+    final alterou = await Navigator.of(context).pushNamed(FiltroClientePage.ROUT_NAME);
+    if (alterou == true) {
+      _atualizarLista();
+    }
   }
 }

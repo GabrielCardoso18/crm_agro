@@ -1,5 +1,4 @@
 import 'package:crm_agro/util/cores_app.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,9 +11,14 @@ class FiltroClientePage extends StatefulWidget {
 
   static const ROUT_NAME = '/filtro-cliente';
 
+  static const CHAVE_CAMPO_ORDENACAO = 'campoOrdenacao';
+  static const USAR_ORDEM_DECRESCENTE = 'usarOrdemDescrescente';
+  static const CHAVE_FILTRO_NOME_FANTASIA = 'filtroNomeFantasia';
+  static const CHAVE_FILTRO_RAZAO_SOCIAL= 'filtroRazaoSocial';
+  static const CHAVE_FILTRO_CPF_CNPJ= 'filtroCPFCNPJ  ';
 }
 
-class _FiltroClientePage extends State {
+class _FiltroClientePage extends State<FiltroClientePage> {
 
   final camposParaOrdenacao = {
     Cliente.CAMPO_ID: 'Código', Cliente.CAMPO_NOME_FANTASIA: 'Nome Fantasia',
@@ -36,9 +40,13 @@ class _FiltroClientePage extends State {
   }
 
   void _carregarSharedPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
     setState(() {
-
+      campoOrdenacao = prefs.getString(FiltroClientePage.CHAVE_CAMPO_ORDENACAO) ?? Cliente.CAMPO_ID;
+      usarOrdemDecrescente = prefs.getBool(FiltroClientePage.USAR_ORDEM_DECRESCENTE) ?? false;
+      nomeFantasiaController.text = prefs.getString(FiltroClientePage.CHAVE_FILTRO_NOME_FANTASIA) ?? '';
+      razaoSocialController.text = prefs.getString(FiltroClientePage.CHAVE_FILTRO_RAZAO_SOCIAL) ?? '';
+      cpfCnpjController.text = prefs.getString(FiltroClientePage.CHAVE_FILTRO_CPF_CNPJ) ?? '';
     });
   }
 
@@ -64,7 +72,11 @@ class _FiltroClientePage extends State {
         floatingActionButton: FloatingActionButton(
           backgroundColor: CoresApp.cinzaEscuro,
           child: Icon(Icons.check, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(_alterouValores),
+          onPressed: () {
+            setState(() {
+              Navigator.of(context).pop(_alterouValores);
+            });
+          }
         ),
       ),
     );
@@ -168,22 +180,49 @@ class _FiltroClientePage extends State {
               ),
             ),
             SizedBox(height: 16),
-            _criarCampoTexto(
+            TextField(
               controller: nomeFantasiaController,
-              label: "Nome Fantasia",
-              icone: Icons.business,
+              decoration: InputDecoration(
+                labelText: "Nome Fantasia",
+                prefixIcon: Icon(Icons.business, color: CoresApp.verde),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: CoresApp.verde),
+                ),
+              ),
+              onChanged: _onCheckNomeFantasia,
             ),
             SizedBox(height: 16),
-            _criarCampoTexto(
+            TextField(
               controller: razaoSocialController,
-              label: "Razão Social",
-              icone: Icons.description,
+              decoration: InputDecoration(
+                labelText: "Razão Social",
+                prefixIcon: Icon(Icons.description, color: CoresApp.verde),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: CoresApp.verde),
+                ),
+              ),
+              onChanged: _onCheckRazaoSocial,
             ),
             SizedBox(height: 16),
-            _criarCampoTexto(
+            TextField(
               controller: cpfCnpjController,
-              label: "CPF/CNPJ",
-              icone: Icons.badge,
+              decoration: InputDecoration(
+                labelText: "CPF/CNPJ",
+                prefixIcon: Icon(Icons.badge, color: CoresApp.verde),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: CoresApp.verde),
+                ),
+              ),
+              onChanged: _onCheckCPFCNPJ,
             ),
           ],
         ),
@@ -191,48 +230,42 @@ class _FiltroClientePage extends State {
     );
   }
 
-  Widget _criarCampoTexto({
-    required TextEditingController controller,
-    required String label,
-    required IconData icone,
-  }) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icone, color: CoresApp.verde),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: CoresApp.verde),
-        ),
-      ),
-      onChanged: _onCheckDescricao,
-    );
-  }
-
   void _onCheckCampoOrdenacao(String? valor) {
+    prefs.setString(FiltroClientePage.CHAVE_CAMPO_ORDENACAO, valor ?? "");
     _alterouValores = true;
+
     setState(() {
-      campoOrdenacao = valor!;
+      campoOrdenacao = valor ?? '';
     });
   }
 
   void _onCheckUsarOrdemDecrescente(bool? valor) {
+    prefs.setBool(FiltroClientePage.USAR_ORDEM_DECRESCENTE, valor == true);
     _alterouValores = true;
     setState(() {
       usarOrdemDecrescente = valor == true;
     });
   }
 
-  void _onCheckDescricao(String valor) {
-    _alterouValores = true;
+  void _onCheckRazaoSocial(String valor) {
+      prefs.setString(FiltroClientePage.CHAVE_FILTRO_RAZAO_SOCIAL, valor ?? '');
+      _alterouValores = true;
   }
+
+  void _onCheckNomeFantasia(String valor) {
+      prefs.setString(FiltroClientePage.CHAVE_FILTRO_NOME_FANTASIA, valor ?? '');
+      _alterouValores = true;
+  }
+
+  void _onCheckCPFCNPJ(String valor) {
+      prefs.setString(FiltroClientePage.CHAVE_FILTRO_CPF_CNPJ, valor ?? '');
+      _alterouValores = true;
+  }
+
 
   Future<bool> _onVoltarClick() async {
     Navigator.of(context).pop(_alterouValores);
-    return true;
+    return _alterouValores;
   }
 
 

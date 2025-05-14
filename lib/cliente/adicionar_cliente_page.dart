@@ -5,17 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class AdicionarClientePage extends StatefulWidget{
+class AdicionarClientePage extends StatefulWidget {
+  final Cliente? cliente;
+
+  AdicionarClientePage({this.cliente});
 
   @override
   _AdicionarClientePage createState() => _AdicionarClientePage();
 
   static const ROUT_NAME = '/adicionar-cliente';
-
 }
 
-class _AdicionarClientePage extends State {
-
+class _AdicionarClientePage extends State<AdicionarClientePage> {
   final nomeFantasiaController = TextEditingController();
   final razaoSocialController = TextEditingController();
   final cpfCnpjController = TextEditingController();
@@ -32,14 +33,38 @@ class _AdicionarClientePage extends State {
   final complementoControler = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final _dateFormat = DateFormat('dd/MM/yyyy');
+  bool preencheuCliente = false;
+  int idCliente = 0;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final Cliente? cliente = ModalRoute.of(context)?.settings.arguments as Cliente?;
+    if(cliente != null && cliente.id != null && !preencheuCliente){
+        preencheuCliente = true;
+        final c = cliente;
+        idCliente = c.id ?? 0;
+        nomeFantasiaController.text = c.nomeFantasia ?? '';
+        razaoSocialController.text = c.razaoSocial ?? '';
+        cpfCnpjController.text = c.cpfCnpj ?? '';
+        telefoneControler.text = c.telefone ?? '';
+        celularControler.text = c.celular ?? '';
+        whatsAppControler.text = c.whatsapp ?? '';
+        emailControler.text = c.email ?? '';
+        enderecoControler.text = c.endereco ?? '';
+        bairroControler.text = c.bairro ?? '';
+        numeroControler.text = c.numero ?? '';
+        cidadeControler.text = c.cidade ?? '';
+        ufControler.text = c.uf ?? '';
+        complementoControler.text = c.complemento ?? '';
+        dataCadastroControler.text = c.dataCadastro != null
+            ? _dateFormat.format(c.dataCadastro!)
+            : '';
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CoresApp.verde,
@@ -322,24 +347,24 @@ class _AdicionarClientePage extends State {
     if (!formKey.currentState!.validate()) return;
 
     final cliente = Cliente(
+      id: idCliente != 0 ? idCliente : null,
       nomeFantasia: nomeFantasiaController.text,
       razaoSocial: razaoSocialController.text,
       cpfCnpj: cpfCnpjController.text,
       dataCadastro: DateTime.now(),
-      endereco: enderecoControler.text != null && enderecoControler.text.isNotEmpty ? enderecoControler.text : null,
-      numero: numeroControler.text != null && numeroControler.text.isNotEmpty ? numeroControler.text : null,
-      bairro: bairroControler.text != null && bairroControler.text.isNotEmpty ? bairroControler.text : null,
-      complemento: complementoControler.text != null && complementoControler.text.isNotEmpty ? complementoControler.text : null,
-      cidade: cidadeControler.text != null && cidadeControler.text.isNotEmpty ? cidadeControler.text : null,
-      uf: ufControler.text!= null && ufControler.text.isNotEmpty ? ufControler.text : null,
-      telefone: telefoneControler.text != null && telefoneControler.text.isNotEmpty ? telefoneControler.text : null ,
-      celular: celularControler.text != null && celularControler.text.isNotEmpty ? celularControler.text : null,
-      whatsapp: whatsAppControler.text != null && whatsAppControler.text.isNotEmpty ? whatsAppControler.text : null,
-      email: emailControler.text != null && emailControler.text.isNotEmpty ? emailControler.text : null,
+      endereco: enderecoControler.text,
+      numero: numeroControler.text,
+      bairro: bairroControler.text,
+      complemento: complementoControler.text,
+      cidade: cidadeControler.text,
+      uf: ufControler.text,
+      telefone: telefoneControler.text,
+      celular: celularControler.text,
+      whatsapp: whatsAppControler.text,
+      email: emailControler.text,
     );
 
     ClienteDAO().salvar(cliente);
-    Navigator.of(context).pop(cliente);
+    Navigator.of(context).pop(true);
   }
 }
-
