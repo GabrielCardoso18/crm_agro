@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:crm_agro/cliente/cliente_page.dart';
-import 'package:crm_agro/item/item_page.dart';
 import 'package:crm_agro/util/cores_app.dart';
-import 'package:crm_agro/venda/venda_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -99,8 +97,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           _criarItemDrawer(Icons.person, "Cliente", ClientePage.ROUT_NAME),
-          _criarItemDrawer(Icons.production_quantity_limits, "Item", ItemPage.ROUT_NAME),
-          _criarItemDrawer(Icons.add_business, "Venda", VendaPage.ROUT_NAME),
           Divider(height: 1, thickness: 1),
           _criarItemDrawer(Icons.exit_to_app, "Sair", null, isExit: true),
         ],
@@ -368,8 +364,6 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           _criarCardMenu("Clientes", Icons.group, ClientePage.ROUT_NAME),
-          _criarCardMenu("Itens", Icons.inventory_2, ItemPage.ROUT_NAME),
-          _criarCardMenu("Vendas", Icons.shopping_cart, VendaPage.ROUT_NAME),
         ],
       ),
     );

@@ -1,6 +1,4 @@
 import 'package:crm_agro/cliente/cliente.dart';
-import 'package:crm_agro/cliente_contato/cliente_contato.dart';
-import 'package:crm_agro/cliente_endereco/cliente_endereco.dart';
 import 'package:crm_agro/dao/cliente_dao.dart';
 import 'package:crm_agro/util/cores_app.dart';
 import 'package:flutter/material.dart';
@@ -328,20 +326,16 @@ class _AdicionarClientePage extends State {
       razaoSocial: razaoSocialController.text,
       cpfCnpj: cpfCnpjController.text,
       dataCadastro: DateTime.now(),
-      contato: ClienteContato(
-        telefone: telefoneControler.text,
-        celular: celularControler.text,
-        whatsapp: whatsAppControler.text,
-        email: emailControler.text,
-      ),
-      endereco: ClienteEndereco(
-        endereco: enderecoControler.text,
-        numero: numeroControler.text,
-        bairro: bairroControler.text,
-        complemento: complementoControler.text,
-        cidade: cidadeControler.text,
-        uf: ufControler.text,
-      ),
+      endereco: enderecoControler.text != null && enderecoControler.text.isNotEmpty ? enderecoControler.text : null,
+      numero: numeroControler.text != null && numeroControler.text.isNotEmpty ? numeroControler.text : null,
+      bairro: bairroControler.text != null && bairroControler.text.isNotEmpty ? bairroControler.text : null,
+      complemento: complementoControler.text != null && complementoControler.text.isNotEmpty ? complementoControler.text : null,
+      cidade: cidadeControler.text != null && cidadeControler.text.isNotEmpty ? cidadeControler.text : null,
+      uf: ufControler.text!= null && ufControler.text.isNotEmpty ? ufControler.text : null,
+      telefone: telefoneControler.text != null && telefoneControler.text.isNotEmpty ? telefoneControler.text : null ,
+      celular: celularControler.text != null && celularControler.text.isNotEmpty ? celularControler.text : null,
+      whatsapp: whatsAppControler.text != null && whatsAppControler.text.isNotEmpty ? whatsAppControler.text : null,
+      email: emailControler.text != null && emailControler.text.isNotEmpty ? emailControler.text : null,
     );
 
     ClienteDAO().salvar(cliente);

@@ -1,5 +1,3 @@
-import 'package:crm_agro/cliente_contato/cliente_contato.dart';
-import 'package:crm_agro/cliente_endereco/cliente_endereco.dart';
 import 'package:intl/intl.dart';
 
 class Cliente{
@@ -9,8 +7,16 @@ class Cliente{
   static const CAMPO_RAZAO_SOCIAL = 'razaosocial';
   static const CAMPO_CPFCNPJ = 'cpfcnpj';
   static const CAMPO_DATA_CADASTRO = 'datacadastro';
-  static const CAMPO_CONTATO = 'contato';
+  static const CAMPO_TELEFONE = 'telefone';
+  static const CAMPO_CELULAR = 'celular';
+  static const CAMPO_WHATSAPP = 'whatsapp';
+  static const CAMPO_EMAIL = 'email';
   static const CAMPO_ENDERECO = 'endereco';
+  static const CAMPO_BAIRRO = 'bairro';
+  static const CAMPO_UF = 'uf';
+  static const CAMPO_NUMERO = 'numero';
+  static const CAMPO_CIDADE = 'cidade';
+  static const CAMPO_COMPLEMENTO = 'complemento';
   static const nomeTabela = 'cliente';
 
   int? id;
@@ -18,11 +24,22 @@ class Cliente{
   String razaoSocial;
   DateTime? dataCadastro;
   String cpfCnpj;
-  ClienteContato? contato;
-  ClienteEndereco? endereco;
+  String? telefone;
+  String? celular;
+  String? whatsapp;
+  String? email;
+  String? endereco;
+  String? bairro;
+  String? uf;
+  String? numero;
+  String? cidade;
+  String? complemento;
 
   Cliente({this.id, required this.razaoSocial, required this.cpfCnpj,
-    this.nomeFantasia,  this.contato, this.dataCadastro, this.endereco});
+    this.nomeFantasia, this.dataCadastro, this.numero, this.endereco,
+    this.uf, this.bairro, this.complemento, this.cidade, this.whatsapp,
+    this.celular, this.telefone, this.email
+  });
 
   Map<String, dynamic> toMap() => <String, dynamic>{
     CAMPO_ID: id,
@@ -30,7 +47,17 @@ class Cliente{
     CAMPO_RAZAO_SOCIAL: razaoSocial,
     CAMPO_CPFCNPJ: cpfCnpj,
     CAMPO_DATA_CADASTRO : dataCadastro == null ? null :
-    DateFormat('dd/MM/yyyy').format(dataCadastro!)
+    DateFormat('dd/MM/yyyy').format(dataCadastro!),
+    CAMPO_TELEFONE: telefone,
+    CAMPO_CELULAR: celular,
+    CAMPO_WHATSAPP: whatsapp,
+    CAMPO_EMAIL: email,
+    CAMPO_ENDERECO: endereco,
+    CAMPO_BAIRRO: bairro,
+    CAMPO_UF: uf,
+    CAMPO_NUMERO: numero,
+    CAMPO_CIDADE: cidade,
+    CAMPO_COMPLEMENTO: complemento
   };
 
   factory Cliente.fromMap(Map<String, dynamic> map) =>
@@ -41,11 +68,16 @@ class Cliente{
         cpfCnpj: map[CAMPO_CPFCNPJ] is String ? map[CAMPO_CPFCNPJ] : '',
         dataCadastro: map[CAMPO_DATA_CADASTRO] == null ? null :
         DateFormat("dd/MM/yyyy").parse(map[CAMPO_DATA_CADASTRO]),
-        contato: map[CAMPO_CONTATO] != null && map[CAMPO_CONTATO] is Map<String, dynamic>
-          ? ClienteContato.fromMap(map[CAMPO_CONTATO])
-        : null,
-        endereco: map[CAMPO_ENDERECO] != null && map[CAMPO_ENDERECO] is Map<String, dynamic>
-            ? ClienteEndereco.fromMap(map[CAMPO_ENDERECO])
-            : null,
+        telefone: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
+        celular: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
+        cidade: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
+        complemento: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
+        numero: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
+        bairro: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
+        endereco: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
+        email: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
+        whatsapp: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
+        uf: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
+
       );
 }

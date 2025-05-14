@@ -1,13 +1,7 @@
 import 'package:crm_agro/cliente/cliente_filtro_page.dart';
 import 'package:crm_agro/cliente/cliente_page.dart';
 import 'package:crm_agro/home/home_page.dart';
-import 'package:crm_agro/item/adicionar_item_page.dart';
-import 'package:crm_agro/item/item_filtro_page.dart';
-import 'package:crm_agro/item/item_page.dart';
 import 'package:crm_agro/util/cores_app.dart';
-import 'package:crm_agro/venda/adicionar_venda_page.dart';
-import 'package:crm_agro/venda/filtro_venda_page.dart';
-import 'package:crm_agro/venda/venda_page.dart';
 import 'package:flutter/material.dart';
 
 import 'cliente/adicionar_cliente_page.dart';
@@ -48,12 +42,6 @@ class MyApp extends StatelessWidget {
         ClientePage.ROUT_NAME:  (BuildContext context) => ClientePage(),
         AdicionarClientePage.ROUT_NAME:  (BuildContext context) => AdicionarClientePage(),
         FiltroClientePage.ROUT_NAME: (BuildContext context) => FiltroClientePage(),
-        ItemPage.ROUT_NAME: (BuildContext context) => ItemPage(),
-        AdicionarItemPage.ROUT_NAME:  (BuildContext context) => AdicionarItemPage(),
-        FiltroItemPage.ROUT_NAME: (BuildContext context) => FiltroItemPage(),
-        VendaPage.ROUT_NAME: (BuildContext context) => VendaPage(),
-        AdicionarVendaPage.ROUT_NAME:  (BuildContext context) => AdicionarVendaPage(),
-        FiltroVendaPage.ROUT_NAME: (BuildContext context) => FiltroVendaPage(),
       },
     );
   }
