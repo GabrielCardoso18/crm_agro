@@ -5,6 +5,7 @@ import 'package:crm_agro/util/cores_app.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -23,7 +24,32 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    solicitarPermissaoLocalizacao();
     _fetchWeatherData();
+  }
+
+  Future<void> solicitarPermissaoLocalizacao() async {
+    LocationPermission permission;
+
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissão negada, você pode mostrar uma mensagem ou tomar ação
+        print('Permissão de localização negada');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissão negada para sempre, o usuário precisa liberar manualmente
+      print('Permissão negada para sempre. Vá nas configurações do app.');
+    }
+
+    if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+      print('Permissão concedida!');
+      // Aqui você pode continuar a pegar a localização
+    }
   }
 
   Future<void> _fetchWeatherData() async {

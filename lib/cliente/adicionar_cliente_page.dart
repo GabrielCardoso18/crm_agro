@@ -3,6 +3,8 @@ import 'package:crm_agro/dao/cliente_dao.dart';
 import 'package:crm_agro/util/cores_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 
 class AdicionarClientePage extends StatefulWidget {
@@ -78,6 +80,15 @@ class _AdicionarClientePage extends State<AdicionarClientePage> {
           ),
         ),
         elevation: 4,
+      ),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+
+            abrirRotaComEndereco('${enderecoControler.text}, ${numeroControler.text},  ${bairroControler.text}, '
+                '${cidadeControler.text}, ${ufControler.text}');
+          },
+          child: Icon(Icons.map),
+        backgroundColor: Colors.grey,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
@@ -367,4 +378,23 @@ class _AdicionarClientePage extends State<AdicionarClientePage> {
     ClienteDAO().salvar(cliente);
     Navigator.of(context).pop(true);
   }
+  Future<void> abrirRotaComEndereco(String enderecoDestino) async {
+    try {
+      Position pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+      final origin = '${pos.latitude},${pos.longitude}';
+      final destination = Uri.encodeComponent(enderecoDestino);
+
+      final url = 'https://www.google.com/maps/dir/?api=1&origin=$origin&destination=$destination&travelmode=driving';
+
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        print('Não foi possível abrir o Google Maps.');
+      }
+    } catch (e) {
+      print('Erro ao pegar localização: $e');
+    }
+  }
+
 }
