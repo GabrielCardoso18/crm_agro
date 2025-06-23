@@ -17,6 +17,7 @@ class Cliente{
   static const CAMPO_NUMERO = 'numero';
   static const CAMPO_CIDADE = 'cidade';
   static const CAMPO_COMPLEMENTO = 'complemento';
+  static const CAMPO_CEP = 'cep';
   static const nomeTabela = 'cliente';
 
   int? id;
@@ -34,11 +35,12 @@ class Cliente{
   String? numero;
   String? cidade;
   String? complemento;
+  String? cep;
 
   Cliente({this.id, required this.razaoSocial, required this.cpfCnpj,
     this.nomeFantasia, this.dataCadastro, this.numero, this.endereco,
     this.uf, this.bairro, this.complemento, this.cidade, this.whatsapp,
-    this.celular, this.telefone, this.email
+    this.celular, this.telefone, this.email, this.cep
   });
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -57,7 +59,8 @@ class Cliente{
     CAMPO_UF: uf,
     CAMPO_NUMERO: numero,
     CAMPO_CIDADE: cidade,
-    CAMPO_COMPLEMENTO: complemento
+    CAMPO_COMPLEMENTO: complemento,
+    CAMPO_CEP: cep
   };
 
   factory Cliente.fromMap(Map<String, dynamic> map) =>
@@ -69,15 +72,15 @@ class Cliente{
         dataCadastro: map[CAMPO_DATA_CADASTRO] == null ? null :
         DateFormat("dd/MM/yyyy").parse(map[CAMPO_DATA_CADASTRO]),
         telefone: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
-        celular: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
-        cidade: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
-        complemento: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
-        numero: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
-        bairro: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
-        endereco: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
-        email: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
-        whatsapp: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
-        uf: map[CAMPO_TELEFONE] is String ? map[CAMPO_TELEFONE] : '',
-
+        celular: map[CAMPO_CELULAR] is String ? map[CAMPO_CELULAR] : '',
+        cidade: map[CAMPO_CIDADE] is String ? map[CAMPO_CIDADE] : '',
+        complemento: map[CAMPO_COMPLEMENTO] is String ? map[CAMPO_COMPLEMENTO] : '',
+        numero: map[CAMPO_NUMERO] is String ? map[CAMPO_NUMERO] : '',
+        bairro: map[CAMPO_BAIRRO] is String ? map[CAMPO_BAIRRO] : '',
+        endereco: map[CAMPO_ENDERECO] is String ? map[CAMPO_ENDERECO] : '',
+        email: map[CAMPO_EMAIL] is String ? map[CAMPO_EMAIL] : '',
+        whatsapp: map[CAMPO_WHATSAPP] is String ? map[CAMPO_WHATSAPP] : '',
+        uf: map[CAMPO_UF] is String ? map[CAMPO_UF] : '',
+        cep: map[CAMPO_CEP] is String ? map[CAMPO_CEP] : '',
       );
 }

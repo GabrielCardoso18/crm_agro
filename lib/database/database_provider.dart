@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DataBaseProvider {
   static const _dbNome = 'crm-agro.db';
-  static const _dbVersion = 5;
+  static const _dbVersion = 6;
 
   DataBaseProvider._init();
 
@@ -48,7 +48,8 @@ class DataBaseProvider {
             ${Cliente.CAMPO_ENDERECO} TEXT,
             ${Cliente.CAMPO_COMPLEMENTO} TEXT,
             ${Cliente.CAMPO_CIDADE} TEXT,
-            ${Cliente.CAMPO_BAIRRO} TEXT
+            ${Cliente.CAMPO_BAIRRO} TEXT,
+            ${Cliente.CAMPO_CEP} TEXT
           );
      ''');
   }

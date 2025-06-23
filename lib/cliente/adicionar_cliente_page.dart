@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:crm_agro/cliente/cliente.dart';
 import 'package:crm_agro/dao/cliente_dao.dart';
 import 'package:crm_agro/util/cores_app.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart';
 
 class AdicionarClientePage extends StatefulWidget {
   final Cliente? cliente;
@@ -32,11 +35,15 @@ class _AdicionarClientePage extends State<AdicionarClientePage> {
   final numeroControler = TextEditingController();
   final cidadeControler = TextEditingController();
   final ufControler = TextEditingController();
+  final cepControler = TextEditingController();
   final complementoControler = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final _dateFormat = DateFormat('dd/MM/yyyy');
   bool preencheuCliente = false;
   int idCliente = 0;
+
+  static const base_url = 'https://viacep.com.br/ws/:cep/json/';
+
 
   @override
   void initState() {
@@ -47,25 +54,26 @@ class _AdicionarClientePage extends State<AdicionarClientePage> {
   Widget build(BuildContext context) {
     final Cliente? cliente = ModalRoute.of(context)?.settings.arguments as Cliente?;
     if(cliente != null && cliente.id != null && !preencheuCliente){
-        preencheuCliente = true;
-        final c = cliente;
-        idCliente = c.id ?? 0;
-        nomeFantasiaController.text = c.nomeFantasia ?? '';
-        razaoSocialController.text = c.razaoSocial ?? '';
-        cpfCnpjController.text = c.cpfCnpj ?? '';
-        telefoneControler.text = c.telefone ?? '';
-        celularControler.text = c.celular ?? '';
-        whatsAppControler.text = c.whatsapp ?? '';
-        emailControler.text = c.email ?? '';
-        enderecoControler.text = c.endereco ?? '';
-        bairroControler.text = c.bairro ?? '';
-        numeroControler.text = c.numero ?? '';
-        cidadeControler.text = c.cidade ?? '';
-        ufControler.text = c.uf ?? '';
-        complementoControler.text = c.complemento ?? '';
-        dataCadastroControler.text = c.dataCadastro != null
-            ? _dateFormat.format(c.dataCadastro!)
-            : '';
+      preencheuCliente = true;
+      final c = cliente;
+      idCliente = c.id ?? 0;
+      nomeFantasiaController.text = c.nomeFantasia ?? '';
+      razaoSocialController.text = c.razaoSocial ?? '';
+      cpfCnpjController.text = c.cpfCnpj ?? '';
+      telefoneControler.text = c.telefone ?? '';
+      celularControler.text = c.celular ?? '';
+      whatsAppControler.text = c.whatsapp ?? '';
+      emailControler.text = c.email ?? '';
+      enderecoControler.text = c.endereco ?? '';
+      bairroControler.text = c.bairro ?? '';
+      numeroControler.text = c.numero ?? '';
+      cidadeControler.text = c.cidade ?? '';
+      ufControler.text = c.uf ?? '';
+      cepControler.text = c.cep ?? '';
+      complementoControler.text = c.complemento ?? '';
+      dataCadastroControler.text = c.dataCadastro != null
+          ? _dateFormat.format(c.dataCadastro!)
+          : '';
     }
     return Scaffold(
       appBar: AppBar(
@@ -82,12 +90,12 @@ class _AdicionarClientePage extends State<AdicionarClientePage> {
         elevation: 4,
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
+        onPressed: () {
 
-            abrirRotaComEndereco('${enderecoControler.text}, ${numeroControler.text},  ${bairroControler.text}, '
-                '${cidadeControler.text}, ${ufControler.text}');
-          },
-          child: Icon(Icons.map),
+          abrirRotaComEndereco('${enderecoControler.text}, ${numeroControler.text},  ${bairroControler.text}, '
+              '${cidadeControler.text}, ${ufControler.text}');
+        },
+        child: Icon(Icons.map),
         backgroundColor: Colors.grey,
       ),
       body: SingleChildScrollView(
@@ -236,6 +244,32 @@ class _AdicionarClientePage extends State<AdicionarClientePage> {
             padding: EdgeInsets.all(16),
             child: Column(
               children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildTextField(
+                        controller: cepControler,
+                        label: 'Cep:',
+                        icon: Icons.location_on,
+                        validator: (val) => val!.isEmpty ? 'Campo obrigatório' : null,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(8),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        if (cepControler.text.isNotEmpty) {
+                          await findCep(cepControler.text);
+                        } else {
+                        }
+                      },
+                      icon: Icon(Icons.search_outlined),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
                 _buildTextField(
                   controller: enderecoControler,
                   label: 'Endereço',
@@ -373,6 +407,7 @@ class _AdicionarClientePage extends State<AdicionarClientePage> {
       celular: celularControler.text,
       whatsapp: whatsAppControler.text,
       email: emailControler.text,
+      cep: cepControler.text
     );
 
     ClienteDAO().salvar(cliente);
@@ -395,6 +430,26 @@ class _AdicionarClientePage extends State<AdicionarClientePage> {
     } catch (e) {
       print('Erro ao pegar localização: $e');
     }
+  }
+
+  Future<void> findCep(String cep) async{
+    final url = base_url.replaceAll(':cep', cep);
+    final uri = Uri.parse(url);
+    final response = await get(uri);
+
+    if (response.statusCode != 200 || response.body.isEmpty){
+      throw Exception();
+    }
+    final decodeBody = jsonDecode(response.body);
+    setState(() {
+      cepControler.text = decodeBody['cep'];
+      enderecoControler.text = decodeBody['logradouro'];
+      complementoControler.text = decodeBody['complemento'];
+      bairroControler.text = decodeBody['bairro'];
+      cidadeControler.text = decodeBody['localidade'];
+      ufControler.text = decodeBody['uf'];
+
+    });
   }
 
 }

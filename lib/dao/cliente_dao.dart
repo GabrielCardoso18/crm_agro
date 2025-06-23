@@ -58,7 +58,7 @@ class ClienteDAO {
       Cliente.CAMPO_ID, Cliente.CAMPO_NOME_FANTASIA, Cliente.CAMPO_RAZAO_SOCIAL, Cliente.CAMPO_CPFCNPJ,
       Cliente.CAMPO_BAIRRO, Cliente.CAMPO_CIDADE, Cliente.CAMPO_COMPLEMENTO, Cliente.CAMPO_ENDERECO,
       Cliente.CAMPO_UF, Cliente.CAMPO_CELULAR, Cliente.CAMPO_EMAIL, Cliente.CAMPO_WHATSAPP, Cliente.CAMPO_DATA_CADASTRO,
-      Cliente.CAMPO_NUMERO
+      Cliente.CAMPO_NUMERO, Cliente.CAMPO_CEP
     ], where: where,
         orderBy: orderBy);
     return resultado.map((m) => Cliente.fromMap(m)).toList();
